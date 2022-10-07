@@ -161,8 +161,6 @@ Following command would display the usage of the bucket command:
     For additional help or support, please visit https://www.sylabs.io/docs/
 
 
-
-
 bucket operation examples:
 -------------------------
 1.Create bucket:
@@ -179,6 +177,33 @@ bucket operation examples:
     Response:
     Found bucket: first-s3-bucket-eee, created at: 2022-10-07 06:23:47 +0000 UTC
     Found bucket: first-s3-bucket-fff, created at: 2022-10-07 14:41:19 +0000 UTC
+
+
+Mount S3 bucket and write objects in mounted path
+---------------------------------------------------
+s3fs allows Linux, macOS, and FreeBSD to mount an S3 bucket via FUSE. For more details
+refer link https://github.com/s3fs-fuse/s3fs-fuse
+
+    1.Install s3fs on ubuntu
+    $ sudo apt install s3fs
+
+    2.Create ${HOME}/.passwd-s3fs file and add aws_access_key_id and aws_secret_access_key values with : seperated
+    as given in below example
+
+    $cat ${HOME}/.passwd-s3fs
+    XXXXXXXXZZZZZXX8YYXX:xxxxxt7qRc1nqmOxxxxlHKnJ0yPmeHxxxxxxxxxx
+
+    3.Mount S3 bucket to mount path /path/to/mountpoint
+    s3fs <bucket-name> /path/to/mountpoint -o passwd_file=${HOME}/.passwd-s3fs -o dbglevel=info -f -o curldbg 
+    -o url=https://s3-us-west-2.amazonaws.com
+
+    4.Verify S3 bucket is mounted to the path /path/to/mountpoint by executing below command
+    $df -h
+    Filesystem      Size  Used Avail Use% Mounted on
+    s3fs            256T     0  256T   0% /path/to/mountpoint
+
+    5.Create some files in mounted path /path/to/mountpoint as a data write. Created files within a bucket will get 
+    reflected in on AWS console as a object.
 
 
 Object Usage:
